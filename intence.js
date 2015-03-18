@@ -1702,8 +1702,7 @@ function (exports) {
      *      │
      *      └─ contextor  - initiates a new stacking context, so that
      *          │          internal z-indices do not mess with the
-     *          │          external content (additionally prevents
-     *          │          extra padding for the body element)
+     *          │          external content
      *          │
      *          ├─ scroller    - the new scrollable element with
      *          │   │            scrollbars (outside of the bounds and
@@ -1712,20 +1711,27 @@ function (exports) {
      *          │   │            another stacking context for the
      *          │   │            hosted content
      *          │   │
-     *          │   └─ container  - has explicit dimensions updated by
-     *          │       │           the resizer event handler, pushes
-     *          │       │           the scrollabrs of the scroller out
-     *          │       │           of the bounds
-     *          │       ├─ ...
-     *          │       ├─ ...    - original content taken over from
-     *          │       ├─ ...      the root elem
-     *          │       :
+     *          │   └─ pusher   - has explicit dimensions updated by
+     *          │       │         the resizer event handler, pushes
+     *          │       │         the scrollabrs of the scroller out
+     *          │       │         of the bounds, has float:left to set
+     *          │       │         up a new block formatting context
+     *          │       │         (otherwise contained floats would
+     *          │       │         affect scroller's geometry)
+     *          │       │
+     *          │       └─ container  - hosts original content, takes
+     *          │           │           over the external margins
+     *          │           │           if root elem is body
+     *          │           ├─ ...
+     *          │           ├─ ...    - original content taken over
+     *          │           ├─ ...      from the root elem
+     *          │           :
      *          │
      *          │
-     *          ├─ west side      - indicator sides, ordered to put
-     *          ├─ east side        north and south on top (z-index
-     *          ├─ south side       is not used since it messes-up
-     *          └─ north side       in IE9)
+     *          ├─ west side    - indicator sides, ordered to put
+     *          ├─ east side      north and south on top (z-index
+     *          ├─ south side     is not used since it messes-up
+     *          └─ north side     in IE9)
      */
     Intence.prototype._createElemStructure = function() {
         this._createElements();
@@ -1741,6 +1747,7 @@ function (exports) {
         this._cmp.wrapper   = elemSample.div.cloneNode(false);
         this._cmp.contextor = elemSample.div.cloneNode(false);
         this._cmp.scroller  = elemSample.div.cloneNode(false);
+        this._cmp.pusher    = elemSample.div.cloneNode(false);
         this._cmp.container = elemSample.div.cloneNode(false);
 
         var style = {
@@ -1764,6 +1771,9 @@ function (exports) {
                 position  : 'absolute',
                 overflow  : 'scroll',
                 zIndex   : 0
+            },
+            pusher : {
+                'float' : 'left'
             },
             container : {}
         };
@@ -1790,6 +1800,7 @@ function (exports) {
         util.setStyle(this._cmp.wrapper, style.wrapper);
         util.setStyle(this._cmp.contextor, style.contextor);
         util.setStyle(this._cmp.scroller, style.scroller);
+        util.setStyle(this._cmp.pusher, style.pusher);
         util.setStyle(this._cmp.container, style.container);
 
         impl.stackingContext(this._cmp.contextor);
@@ -1803,7 +1814,8 @@ function (exports) {
             this._cmp.container, util.detachChildren(this._elem)
         );
 
-        this._cmp.scroller.appendChild(this._cmp.container);
+        this._cmp.pusher.appendChild(this._cmp.container);
+        this._cmp.scroller.appendChild(this._cmp.pusher);
         this._cmp.contextor.appendChild(this._cmp.scroller);
         this._cmp.wrapper.appendChild(this._cmp.contextor);
         this._elem.appendChild(this._cmp.wrapper);
@@ -1870,7 +1882,7 @@ function (exports) {
      */
     Intence.prototype._setGeometry = function() {
         var geom = this._cmp.wrapper.getBoundingClientRect();
-        util.setStyle(this._cmp.container, {
+        util.setStyle(this._cmp.pusher, {
             width  : util.px(Math.ceil(geom.width)),
             height : util.px(Math.ceil(geom.height))
         });
@@ -3469,8 +3481,7 @@ function (exports) {
     }
 
 
-    exports.reintence = reintence;
+    exports.reset = reintence;
     exports.enabled = INTENCE_ENABLED;
-
 }));
 
