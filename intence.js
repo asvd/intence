@@ -67,10 +67,13 @@ function (exports) {
         return camel in document.documentElement.style &&
             elem.style[camel].indexOf(value) != '-1';
     }
-
-
-    var IS_IE = /*@cc_on!@*/false || !!document.documentMode;
+    
     var IS_FF = typeof InstallTrigger !== 'undefined';
+    var IS_IE = /*@cc_on!@*/false || !!document.documentMode;
+    var IS_SAFARI =
+        Object.prototype.toString.call(window.HTMLElement).
+        indexOf('Constructor') > 0;
+    
 
     // what is supported by the browser
     var features = {
@@ -181,6 +184,18 @@ function (exports) {
         INTENCE_ENABLED = false;
     }
 
+    // disabling particular browsers
+    var UA = navigator.userAgent;
+    if (
+        // supported Opera 15+ does not contain its name in UA
+        UA.indexOf('Opera') != -1 ||
+        // FF < 8 not supported
+        (IS_FF && +UA.match(/Firefox\/(\d+)/)[1] < 8) ||
+        // Safari < 7 not supported
+        (IS_SAFARI && +UA.match(/Version\/(\d+)/)[1] < 7)
+    ) {
+        INTENCE_ENABLED = false;
+    }
 
     // browser-dependent implementations
     var impl = {};
@@ -1220,13 +1235,13 @@ function (exports) {
 
             var me = this;
             this._img.addEventListener('load', function() {
-                document.body.removeChild(me._img);
+                me._img.parentNode.removeChild(me._img);
                 me._init(me._img);
                 me._ready.emit();
             }, false);
 
             this._img.addEventListener('error', function() {
-                document.body.removeChild(me._img);
+                me._img.parentNode.removeChild(me._img);
                 me._init(null);
                 me._ready.emit();
             }, false);
@@ -1564,18 +1579,22 @@ function (exports) {
      * 
      * @param {Element} elem to upgarde
      * @param {Boolean} isBody true if element is body
+     * @param {Function} listener to be issued on resize
      */
-    var Resizer = function(elem, isBody) {
+    var Resizer = function(elem, isBody, listener) {
         this._elem = elem;
         this._isBody = isBody;
-
-        var me = this;
-        this._handler = function() {
-            me.onresize();
-        };
+        this._listener = listener;
 
         if (this._isBody) {
-            window.addEventListener('resize', this._handler, false);
+            window.addEventListener('resize', this._listener, false);
+
+            // initially updating geometry
+            if (document.readyState == "complete") {
+                this._listener();
+            } else {
+                window.addEventListener("load", this._listener, false);
+            }
         } else {
             this._detector = elemSample.object.cloneNode(false);
             util.setStyle(this._detector, {
@@ -1590,10 +1609,14 @@ function (exports) {
                 zIndex        : -2048   // specially for IE
             });
 
+            var me = this;
             this._detector.onload = function() {
                 this.contentDocument.defaultView.addEventListener(
-                    'resize', me._handler, false
+                    'resize', me._listener, false
                 );
+
+                // initially updating geometry
+                me._listener();
             }
 
             this._detector.type = 'text/html';
@@ -1611,18 +1634,12 @@ function (exports) {
 
     
     /**
-     * Handler for the resize event, to be defined for an instance
-     */
-    Resizer.prototype.onresize = function(){};
-    
-
-    /**
      * Removes the resize detector from the element
      */
     Resizer.prototype.destroy = function() {
         if (this._isBody) {
             window.removeEventListener(
-                'resize', this._handler, false
+                'resize', this._listener, false
             );
         } else {
             this._elem.removeChild(this._detector);
@@ -1827,13 +1844,13 @@ function (exports) {
      */
     Intence.prototype._createResizer = function() {
         var me = this;
-        this._resizer = new Resizer(this._cmp.wrapper, this._isBody);
-        this._resizer.onresize = function() {
+        var listener = function() {
             me._setGeometry();
             me._indicate();
         }
 
-        this._setGeometry();
+        this._resizer =
+            new Resizer(this._cmp.wrapper, this._isBody, listener);
     }
 
 
@@ -3466,7 +3483,7 @@ function (exports) {
      * Updates the set of scrollable elements featured with the
      * intence scroll indicators
      */
-    var reintence = function() {
+    var reset = function() {
         if (INTENCE_ENABLED) {
             destroyUnintenced();
             createIntenced();
@@ -3475,13 +3492,13 @@ function (exports) {
     
     
     if (document.readyState == "complete") {
-        reintence();
+        reset();
     } else {
-        window.addEventListener("load", reintence, false);
+        window.addEventListener("load", reset, false);
     }
 
 
-    exports.reset = reintence;
+    exports.reset = reset;
     exports.enabled = INTENCE_ENABLED;
 }));
 
