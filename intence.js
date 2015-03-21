@@ -1,6 +1,6 @@
 /**
  * @fileoverview intence - scrolling indicator
- * @version 1.0.0
+ * @version 1.1.0
  * 
  * @license MIT, see http://github.com/asvd/intence
  * @copyright 2015 asvd <heliosframework@gmail.com> 
@@ -35,7 +35,8 @@ function (exports) {
         div    : document.createElement('div'),
         img    : document.createElement('img'),
         canvas : document.createElement('canvas'),
-        object : document.createElement('object')
+        object : document.createElement('object'),
+        style  : document.createElement('style')
     };
 
 
@@ -67,7 +68,9 @@ function (exports) {
         return camel in document.documentElement.style &&
             elem.style[camel].indexOf(value) != '-1';
     }
-    
+
+    var UA = navigator.userAgent;
+
     var IS_FF = typeof InstallTrigger !== 'undefined';
     var IS_IE = /*@cc_on!@*/false || !!document.documentMode;
     var IS_SAFARI =
@@ -142,7 +145,9 @@ function (exports) {
         // applying a transparency gradient mask
         mask   : null,
         // using a canvas element as a background
-        canvas : null
+        canvas : null,
+        // setting float:left for the element
+        floatLeft : null
     };
 
     if (features.canvas) {
@@ -179,13 +184,20 @@ function (exports) {
         INTENCE_ENABLED = false;
     }
 
+    // for some reason FF < 36 require a stylesheet to set float:left
+    if (IS_FF && +UA.match(/Firefox\/(\d+)/)[1] < 36) {
+        METHODS.floatLeft = 'stylesheet';
+    } else {
+        METHODS.floatLeft = 'direct';
+    }
+    
+
     if (METHODS.blocks == 'svg' && !IS_IE) {
         // svg variant only works reasonably fast in IE
         INTENCE_ENABLED = false;
     }
 
     // disabling particular browsers
-    var UA = navigator.userAgent;
     if (
         // supported Opera 15+ does not contain its name in UA
         UA.indexOf('Opera') != -1 ||
@@ -613,8 +625,65 @@ function (exports) {
     } else {
         impl.hasClass = hasClass_className;
     }
+    
+    
+    // setting float:left for an element
 
 
+    /**
+     * Applies float:left for the element.
+     * 
+     * Direct implementation simply updates the style property
+     * 
+     * @param {Element} elem to set float:left for
+     */
+    var floatLeft_direct = function(elem) {
+        elem.style['float'] ='left';
+    }
+    
+    
+    /**
+     * Applies float:left for the element.
+     * 
+     * For some reasons, direct way does not work in FF < 36, so this
+     * variant creates a stylesheet and sets the class for the element
+     * 
+     * @param {Element} elem to set float:left for
+     */
+    var floatLeft_stylesheet = function(elem) {
+        elem.className = getFloatLeftClassName();
+    }
+    
+    
+    /**
+     * Creates a stylesheet (if not created yet) with the css class
+     * having float:left
+     * 
+     * @returns {String} name of the css class to apply
+     */
+    var _floatLeftClassName = null;
+    var getFloatLeftClassName = function() {
+        if (!_floatLeftClassName) {
+            var cls = 'float-left-cls-'+UQ;
+            var head = document.getElementsByTagName('head')[0];
+            var style = elemSample.style.cloneNode(false);
+            style.type = 'text/css';
+            style.innerHTML = '.' + cls + ' { float:left; }';
+            head.appendChild(style);
+            _floatLeftClassName = cls;
+        }
+
+        return _floatLeftClassName;
+    }
+
+
+    if (METHODS.floatLeft == 'stylesheet') {
+        impl.floatLeft = floatLeft_stylesheet;
+    } else {
+        impl.floatLeft = floatLeft_direct;
+    }
+    
+    
 
     var util = {};
 
@@ -1789,9 +1858,6 @@ function (exports) {
                 overflow  : 'scroll',
                 zIndex   : 0
             },
-            pusher : {
-                'float' : 'left'
-            },
             container : {}
         };
 
@@ -1817,7 +1883,7 @@ function (exports) {
         util.setStyle(this._cmp.wrapper, style.wrapper);
         util.setStyle(this._cmp.contextor, style.contextor);
         util.setStyle(this._cmp.scroller, style.scroller);
-        util.setStyle(this._cmp.pusher, style.pusher);
+        impl.floatLeft(this._cmp.pusher);
         util.setStyle(this._cmp.container, style.container);
 
         impl.stackingContext(this._cmp.contextor);
