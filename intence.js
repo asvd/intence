@@ -185,7 +185,7 @@ function (exports) {
         INTENCE_ENABLED = false;
     }
 
-    // for some reason FF < 36 require a stylesheet to set float:left
+    // FF < 36 requires a stylesheet to set float:left
     if (IS_FF && +UA.match(/Firefox\/(\d+)/)[1] < 36) {
         METHODS.floatLeft = 'stylesheet';
     } else {
@@ -212,8 +212,8 @@ function (exports) {
         INTENCE_ENABLED = false;
     }
 
-    // browser-dependent implementations
-    var impl = {};
+  
+    var impl = {};  // browser-dependent implementations
 
 
     /**
