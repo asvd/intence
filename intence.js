@@ -76,6 +76,7 @@ function (exports) {
     var IS_SAFARI =
         Object.prototype.toString.call(window.HTMLElement).
         indexOf('Constructor') > 0;
+    var IS_CHROME = !!window.chrome;
     
 
     // what is supported by the browser
@@ -203,6 +204,8 @@ function (exports) {
         UA.indexOf('Opera') != -1 ||
         // FF < 8 not supported
         (IS_FF && +UA.match(/Firefox\/(\d+)/)[1] < 8) ||
+        // Chrome < 15 not supported
+        (IS_CHROME && +UA.match(/Chrome\/(\d+)/)[1] < 15) ||
         // Safari < 7 not supported
         (IS_SAFARI && +UA.match(/Version\/(\d+)/)[1] < 7)
     ) {
