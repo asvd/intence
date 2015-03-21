@@ -1,11 +1,10 @@
 intence, the scrolling indicator
 ================================
 
-intence replaces the scrollbar with a texture
+intence replaces a scrollbar with a texture
 
-
-see http://asvd.github.io/intence/ for concept description and
-installation guide
+see http://asvd.github.io/intence/ for the concept description and
+usage guide
 
 
 
