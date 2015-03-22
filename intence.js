@@ -1766,10 +1766,18 @@ function (exports) {
     
 
     /**
-     * Returns element
+     * @returns {Element} main element
      */
     Intence.prototype.getElem = function() {
         return this._elem;
+    }
+    
+    
+    /**
+     * @returns {Element} actual scroller
+     */
+    Intence.prototype.getScroller = function() {
+        return this._cmp.scroller;
     }
 
 
@@ -1891,11 +1899,6 @@ function (exports) {
 
         impl.stackingContext(this._cmp.contextor);
         
-        var id = this._elem.getAttribute('id');
-        if (id) {
-            this._cmp.scroller.setAttribute('id', id+'-scroller');
-        }
-
         util.attachChildren(
             this._cmp.container, util.detachChildren(this._elem)
         );
@@ -3519,15 +3522,19 @@ function (exports) {
      * elements which do not have intence class anymore
      */
     var destroyUnintenced = function() {
-        var elem;
-        for (var i=0; i < intences.length; i++) {
-            elem = intences[i].getElem();
-            if (!impl.hasClass(elem, 'intence')) {
-                intences[i].destroy();
-                elem.intence = null;
-                delete elem.intence
-                intences.splice(i,1);
-                i--;
+        if (INTENCE_ENABLED) {
+            var elem;
+            for (var i=0; i < intences.length; i++) {
+                elem = intences[i].getElem();
+                if (!impl.hasClass(elem, 'intence')) {
+                    intences[i].destroy();
+                    elem.intence = null;
+                    elem.scroller = null;
+                    delete elem.intence;
+                    delete elem.scroller;
+                    intences.splice(i,1);
+                    i--;
+                }
             }
         }
     }
@@ -3539,10 +3546,18 @@ function (exports) {
      */
     var createIntenced = function() {
         var elems = document.getElementsByClassName('intence');
-        for (var i = 0; i < elems.length; i++) {
-            if (!elems[i].intence) {
-                intences.push(new Intence(elems[i]));
-                elems[i].intence = true;
+        var i, elem
+        for (i = 0; i < elems.length; i++) {
+            elem = elems[i];
+            if (INTENCE_ENABLED) {
+                if (!elem.intence) {
+                    var intence = new Intence(elem);
+                    intences.push(intence);
+                    elem.intence = true;
+                    elem.scroller = intence.getScroller();
+                }
+            } else {
+                elem.scroller = elem;
             }
         }
     }
@@ -3553,10 +3568,8 @@ function (exports) {
      * intence scroll indicators
      */
     var reset = function() {
-        if (INTENCE_ENABLED) {
-            destroyUnintenced();
-            createIntenced();
-        }
+        destroyUnintenced();
+        createIntenced();
     }
     
     
