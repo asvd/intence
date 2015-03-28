@@ -1,6 +1,6 @@
 /**
  * @fileoverview intence - scrolling indicator
- * @version 1.1.0
+ * @version 1.1.2
  * 
  * @license MIT, see http://github.com/asvd/intence
  * @copyright 2015 asvd <heliosframework@gmail.com> 
@@ -20,7 +20,7 @@ function (exports) {
 
     var cfg = {
         textureMaxSqueeze : 1000,
-        indicatorMaxArea  : .16,
+        indicatorMaxArea  : .12,
         indicatorGain     : 1/3000,
         animationTime     : 160,
         animationDelay    : 20
@@ -318,17 +318,14 @@ function (exports) {
         var svg = util.genSVGElement('svg');
         var defs = util.genSVGElement('defs', svg);
 
-        var linearGradient = util.genSVGLinearGradient(
-            defs, dir, gradientId
-        );
-
+        util.genSVGLinearGradient(defs, dir, gradientId);
         var mask = util.genSVGElement('mask', defs, {
             id               : maskId,
             maskUnits        : 'objectBoundingBox',
             maskContentUnits : 'objectBoundingBox'
         });
 
-        var rect = util.genSVGElement('rect', mask, {
+        util.genSVGElement('rect', mask, {
             y      : '0',
             width  : '1',
             height : '1',
@@ -927,8 +924,6 @@ function (exports) {
      * @param {Element} parent parent element (defs)
      * @param {String} dir gradient direction (north, east, ...)
      * @param {String} id of the gradient to assign
-     * 
-     * @returns {Element} generated element
      */
     util.genSVGLinearGradient = function(parent, dir, id) {
         var gradientAttr = {
@@ -957,17 +952,15 @@ function (exports) {
             'linearGradient', parent, gradientAttr
         );
 
-        var stop1 = util.genSVGElement('stop', linearGradient, {
+        util.genSVGElement('stop', linearGradient, {
             'stop-color': 'white',
             offset: '0%'
         });
 
-        var stop2 = util.genSVGElement('stop', linearGradient, {
+        util.genSVGElement('stop', linearGradient, {
             'stop-color': 'black',
             offset: '100%'
         });
-
-        return linearGradient;
     }
     
     
@@ -1003,7 +996,7 @@ function (exports) {
         var base = 10;
         var disp = base * .4;
 
-        var row, col, idx, val, rowIntensity, intensity;
+        var row, col, idx, rowIntensity, intensity;
         for (row = 0; row < h; row++) {
             rowIntensity = 10 + Math.floor(Math.random() * base);
             for (col = 0; col < w; col++) {
@@ -2227,11 +2220,10 @@ function (exports) {
      * @returns {Boolean} true if total dimensions changed
      */
     Intence.prototype._haveTotalsChanged = function(dir, scroll) {
-        var changed = false;
+        var newTotal =
+            util.isVertical[dir] ? scroll.height : scroll.width;
 
-        var el = this._cmp.scroller;
-        var newTotal = util.isVertical[dir] ?
-            scroll.height : scroll.width;
+        var changed = false;
         if (this._totals[dir] != newTotal) {
             changed = true;
             this._totals[dir] = newTotal;
@@ -2577,8 +2569,6 @@ function (exports) {
      */
     var createSideElement = function(dir) {
         var side = elemSample.div.cloneNode(false);
-        var vertical = util.isVertical[dir];
-
         var style = {
             pointerEvents : 'none',
             display  : 'inline',
@@ -2854,10 +2844,7 @@ function (exports) {
         var svg = util.genSVGElement('svg');
         var defs = util.genSVGElement('defs', svg);
 
-        var linearGradient = util.genSVGLinearGradient(
-            defs, null, null
-        );
-
+        util.genSVGLinearGradient(defs, null, null);
         var mask = util.genSVGElement('mask', defs, {
             x      : '0',
             y      : '0',
@@ -2865,10 +2852,7 @@ function (exports) {
             height : '100%'
         });
 
-        var rectWidth = '0';
-        var rectHeight = '0';
-
-        var maskRect = util.genSVGElement('rect', mask, {
+        util.genSVGElement('rect', mask, {
             x      : '0',
             y      : '0',
             width  : '0',
@@ -3345,7 +3329,7 @@ function (exports) {
             width : '100%'
         };
 
-        var block, blocks = [];
+        var block;
         for (var i = 0; i < cfg.blocksNumber; i++) {
             block = elemSample.div.cloneNode(false);
             util.setStyle(block, style);
