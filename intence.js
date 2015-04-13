@@ -21,7 +21,7 @@ function (exports) {
     var cfg = {
         textureMaxSqueeze : 1000,
         indicatorMaxArea  : .12,
-        indicatorGain     : 1/3000,
+        indicatorGain     : 1/4500,
         animationTime     : 160,
         animationDelay    : 20
     };
@@ -233,8 +233,20 @@ function (exports) {
         };
 
         elem.style.WebkitMaskImage =
-            '-webkit-linear-gradient('+ where[dir] + ', '+
-            'rgba(0,0,0,1), rgba(0,0,0,0) 100%)';
+            '-webkit-linear-gradient('
+                +  where[dir] + ','
+                + 'rgba(0,0,0,1) 0%,'
+                + 'rgba(0,0,0,.81) 10%,'
+                + 'rgba(0,0,0,.64) 20%,'
+                + 'rgba(0,0,0,.49) 30%,'
+                + 'rgba(0,0,0,.36) 40%,'
+                + 'rgba(0,0,0,.25) 50%,'
+                + 'rgba(0,0,0,.16) 60%,'
+                + 'rgba(0,0,0,.09) 70%,'
+                + 'rgba(0,0,0,.04) 80%,'
+                + 'rgba(0,0,0,.01) 90%,'
+                + 'rgba(0,0,0,0)  100%'
+            + ')';
     }
 
 
@@ -951,16 +963,15 @@ function (exports) {
         var linearGradient = util.genSVGElement(
             'linearGradient', parent, gradientAttr
         );
-
-        util.genSVGElement('stop', linearGradient, {
-            'stop-color': 'white',
-            offset: '0%'
-        });
-
-        util.genSVGElement('stop', linearGradient, {
-            'stop-color': 'black',
-            offset: '100%'
-        });
+        
+        var i, p;
+        for (i = 0; i <= 10; i++) {
+            p = ''+((10-i)*(10-i)) + '%';
+            util.genSVGElement('stop', linearGradient, {
+                'stop-color': 'rgb('+p+','+p+','+p+')',
+                offset: ''+(i*10)+'%'
+            });
+        }
     }
     
     
@@ -1722,7 +1733,7 @@ function (exports) {
     var Intence = function(elem) {
         this._destroyed = false;
         this._elem = elem;
-        this._isBody = (this._elem.nodeName.toLowerCase() == 'body');
+        this._isBody = (this._elem == document.body);
 
         this._cmp = {};  // elements created upon scrollbar removal
         this._sideReady = {}; // info about which sides are initialized
