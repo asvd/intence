@@ -1,6 +1,6 @@
 /**
  * @fileoverview intence - scrolling indicator
- * @version 1.1.2
+ * @version 1.1.3
  * 
  * @license MIT, see http://github.com/asvd/intence
  * @copyright 2015 asvd <heliosframework@gmail.com> 
