@@ -1,6 +1,6 @@
 /**
  * @fileoverview intence - scrolling indicator
- * @version 1.1.3
+ * @version 1.1.4
  * 
  * @license MIT, see http://github.com/asvd/intence
  * @copyright 2015 asvd <heliosframework@gmail.com> 
@@ -199,15 +199,26 @@ function (exports) {
     }
 
     // disabling particular browsers
+    var match;
     if (
         // supported Opera 15+ does not contain its name in UA
         UA.indexOf('Opera') != -1 ||
         // FF < 8 not supported
-        (IS_FF && +UA.match(/Firefox\/(\d+)/)[1] < 8) ||
-        // Chrome < 15 not supported
-        (IS_CHROME && +UA.match(/Chrome\/(\d+)/)[1] < 15) ||
+        (IS_FF &&
+         (match = UA.match(/Firefox\/(\d+)/)) &&
+         +match[1] < 8) ||
         // Safari < 7 not supported
-        (IS_SAFARI && +UA.match(/Version\/(\d+)/)[1] < 7)
+        (IS_SAFARI &&
+         (match = UA.match(/Version\/(\d+)/)) &&
+         +match[1] < 7) ||
+        // Chrome on iPad < 15 not supported
+        (IS_SAFARI &&
+         (match = UA.match(/CriOS\/(\d+)/)) &&
+         +match[1] < 15) ||
+        // Chrome < 15 not supported
+        (IS_CHROME &&
+         (match=UA.match(/Chrome\/(\d+)/)) &&
+         +match[1] < 15)
     ) {
         INTENCE_ENABLED = false;
     }
