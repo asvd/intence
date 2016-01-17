@@ -20,7 +20,8 @@
     var cfg = {
         textureMaxSqueeze : 1000,
         indicatorMaxArea  : .12,
-        indicatorGain     : 1/4500,
+        gainSlownessMin   : 300,
+        gainSlownessMax   : 5000,
         animationTime     : 160,
         animationDelay    : 20
     };
@@ -2121,9 +2122,14 @@
                 var areaSize =
                     util.isVertical[dir] ? geom.height : geom.width;
 
+                var scrollSize =
+                    util.isVertical[dir] ?
+                        scrollInfo.height : scrollInfo.width;
+
                 var intensity = this._getIntensity(
                     beyond[dir], infinite[dir],
-                    data.maxIntensity, areaSize
+                    data.maxIntensity, areaSize,
+                    scrollSize
                 );
 
                 var sideOffset =
@@ -2327,17 +2333,23 @@
      * @param {Boolean} infinite true if side is set as infinite
      * @param {Number} maxSize of the container
      * @param {Number} areaSize visible area size
+     * @param {Number} scrollSize total scrollable distance
      *
      * @returns {Number} current size of the container
      */
     Intence.prototype._getIntensity = function(
-        beyond, infinite, maxSize, areaSize
+        beyond, infinite, maxSize, areaSize, scrollSize
     ) {
-        var intensity =
-            infinite ? 1 : 1 - 1 / (beyond*cfg.indicatorGain + 1);
-        var max = Math.min(maxSize, cfg.indicatorMaxArea * areaSize);
-        var pad = 1;
-        var size = pad + Math.ceil(intensity * (max-pad))
+        var min = cfg.gainSlownessMin;
+        var max = cfg.gainSlownessMax;
+        var diff = max-min;
+        var rate = 1/Math.max(Math.log(Math.log(scrollSize/200)),1);
+        var slowness = max - rate * diff;
+        var gain = 1 / slowness;
+        var intensity = infinite ? 1 : 1 - 1 / (beyond*gain + 1);
+        var maximal = Math.min(maxSize, cfg.indicatorMaxArea * areaSize);
+        var pad = 1;  // in px
+        var size = pad + Math.ceil(intensity * (maximal-pad))
         return size;
     }
 
