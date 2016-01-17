@@ -1860,6 +1860,12 @@
     }
 
 
+    // list of attributes to be forwarded to the container
+    Intence.prototype._forwardAttrs = [
+        'contenteditable'
+    ];
+
+
     /**
      * Creates a set of elements
      */
@@ -1897,6 +1903,7 @@
 
 
         this._origStyle = {overflow : this._elem.style.overflow};
+        var i;
         if (this._isBody) {
             var margins = [
                 'margin', 'marginTop', 'marginRight',
@@ -1904,7 +1911,7 @@
             ];
 
             var cs = window.getComputedStyle(this._elem, null);
-            var i, m;
+            var m;
             for (i = 0; i < margins.length; i++) {
                 m = margins[i];
                 style.container[m] = cs[m];
@@ -1922,6 +1929,15 @@
         util.setStyle(this._cmp.container, style.container);
 
         impl.stackingContext(this._cmp.contextor);
+
+        for (i = 0; i < this._forwardAttrs.length; i++) {
+            var attr = this._forwardAttrs[i];
+            if (this._elem.hasAttribute(attr)) {
+                var value = this._elem.getAttribute(attr);
+                this._elem.removeAttribute(attr);
+                this._cmp.container.setAttribute(attr, value);
+            }
+        }
 
         util.attachChildren(
             this._cmp.container, util.detachChildren(this._elem)
@@ -1982,6 +1998,15 @@
         for (var prop in this._origStyle) {
             if (this._origStyle.hasOwnProperty(prop)) {
                 this._elem.style[prop] = this._origStyle[prop];
+            }
+        }
+
+        for (var i = 0; i < this._forwardAttrs.length; i++) {
+            var attr = this._forwardAttrs[i];
+            if (this._cmp.container.hasAttribute(attr)) {
+                this._elem.setAttribute(
+                    attr, this._cmp.container.getAttribute(attr)
+                );
             }
         }
 
