@@ -1865,6 +1865,11 @@
         'contenteditable'
     ];
 
+    // element styles to be forwarded to the container
+    Intence.prototype._forwardStyles = [
+        'outline'
+    ];
+
 
     /**
      * Creates a set of elements
@@ -1902,6 +1907,7 @@
         };
 
 
+        var cs = window.getComputedStyle(this._elem, null);
         this._origStyle = {overflow : this._elem.style.overflow};
         var i;
         if (this._isBody) {
@@ -1910,7 +1916,6 @@
                 'marginBottom', 'marginLeft'
             ];
 
-            var cs = window.getComputedStyle(this._elem, null);
             var m;
             for (i = 0; i < margins.length; i++) {
                 m = margins[i];
@@ -1921,15 +1926,6 @@
             style.elem.margin = 0;
         }
 
-        util.setStyle(this._elem, style.elem);
-        util.setStyle(this._cmp.wrapper, style.wrapper);
-        util.setStyle(this._cmp.contextor, style.contextor);
-        util.setStyle(this._cmp.scroller, style.scroller);
-        impl.floatLeft(this._cmp.pusher);
-        util.setStyle(this._cmp.container, style.container);
-
-        impl.stackingContext(this._cmp.contextor);
-
         for (i = 0; i < this._forwardAttrs.length; i++) {
             var attr = this._forwardAttrs[i];
             if (this._elem.hasAttribute(attr)) {
@@ -1938,6 +1934,22 @@
                 this._cmp.container.setAttribute(attr, value);
             }
         }
+
+        for (i = 0; i < this._forwardStyles.length; i++) {
+            var prop = this._forwardStyles[i];
+            if (cs[prop]) {
+                style.container[prop] = cs[prop];
+            }
+        }
+
+        util.setStyle(this._elem, style.elem);
+        util.setStyle(this._cmp.wrapper, style.wrapper);
+        util.setStyle(this._cmp.contextor, style.contextor);
+        util.setStyle(this._cmp.scroller, style.scroller);
+        impl.floatLeft(this._cmp.pusher);
+        util.setStyle(this._cmp.container, style.container);
+
+        impl.stackingContext(this._cmp.contextor);
 
         util.attachChildren(
             this._cmp.container, util.detachChildren(this._elem)
