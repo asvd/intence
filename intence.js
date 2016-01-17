@@ -1868,7 +1868,12 @@
 
     // element styles to be forwarded to the container
     Intence.prototype._forwardStyles = [
-        'outline'
+        'outline',
+        'padding',
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingLeft'
     ];
 
 
@@ -1913,8 +1918,11 @@
         var i;
         if (this._isBody) {
             var margins = [
-                'margin', 'marginTop', 'marginRight',
-                'marginBottom', 'marginLeft'
+                'margin',
+                'marginTop',
+                'marginRight',
+                'marginBottom',
+                'marginLeft'
             ];
 
             var m;
