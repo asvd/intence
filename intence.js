@@ -1,9 +1,9 @@
 /**
  * @fileoverview intence - scrolling indicator
  * @version 1.1.4
- * 
+ *
  * @license MIT, see http://github.com/asvd/intence
- * @copyright 2015 asvd <heliosframework@gmail.com> 
+ * @copyright 2015 asvd <heliosframework@gmail.com>
  */
 
 
@@ -15,8 +15,7 @@
     } else {
         factory((root.intence = {}));
     }
-}(this,
-function (exports) {
+}(this, function (exports) {
 
     var cfg = {
         textureMaxSqueeze : 1000,
@@ -43,11 +42,11 @@ function (exports) {
     /**
      * Checks if the CSS property may have as a value the CSS function
      * with the given parameters
-     * 
+     *
      * @param {String} name of the property
      * @param {String} value (or a function name)
      * @param {String} params of a function as example
-     * 
+     *
      * @returns {Boolean}
      */
     var checkCSSProperty = function(name, value, params) {
@@ -77,18 +76,18 @@ function (exports) {
         Object.prototype.toString.call(window.HTMLElement).
         indexOf('Constructor') > 0;
     var IS_CHROME = !!window.chrome;
-    
+
 
     // what is supported by the browser
     var features = {
         classList : !!elemSample.div.classList,
-        
+
         event : !!window.addEventListener,
 
         canvas : !!elemSample.canvas.getContext,
 
         isolation : checkCSSProperty('isolation', 'isolate'),
-        
+
         opacity : checkCSSProperty('opacity', '.5'),
 
         transform : checkCSSProperty(
@@ -98,6 +97,7 @@ function (exports) {
         webkitTransform : checkCSSProperty(
             '-webkit-transform', 'rotate', '-180deg'
         ),
+
 
         backgroundCanvas : {
             webkit :
@@ -191,7 +191,7 @@ function (exports) {
     } else {
         METHODS.floatLeft = 'direct';
     }
-    
+
 
     if (METHODS.blocks == 'svg' && !IS_IE) {
         // svg variant only works reasonably fast in IE
@@ -223,15 +223,15 @@ function (exports) {
         INTENCE_ENABLED = false;
     }
 
-  
+
     var impl = {};  // browser-dependent implementations
 
 
     /**
      * Applies gradient mask to the given component
-     * 
+     *
      * Uses -webkit-mask-image CSS property
-     * 
+     *
      * @param {Element} elem DOM element to apply mask to
      * @param {String} dir direction of the mask
      */
@@ -263,9 +263,9 @@ function (exports) {
 
     /**
      * Applies gradient mask to the given component
-     * 
+     *
      * Uses DXImageTransform.Microsoft.Alpha filter
-     * 
+     *
      * @param {Element} elem DOM element to apply mask to
      * @param {String} dir direction of the mask
      */
@@ -311,9 +311,9 @@ function (exports) {
 
     /**
      * Applies gradient mask to the given component
-     * 
+     *
      * Uses generated SVG element
-     * 
+     *
      * @param {Element} elem DOM element to apply mask to
      * @param {String} dir direction of the mask
      */
@@ -328,9 +328,9 @@ function (exports) {
 
     /**
      * Generates an SVG image containing a gradient mask
-     * 
+     *
      * @param {String} dir direction of the mask gradient
-     * 
+     *
      * @return {String} mask id to reuse
      */
     var genMaskSVG = function(dir) {
@@ -369,7 +369,7 @@ function (exports) {
 
     /**
      * Applies gradient mask to the given component
-     * 
+     *
      * @param {Element} elem DOM element to apply mask to
      * @param {String} dir direction of the mask
      */
@@ -384,16 +384,16 @@ function (exports) {
         impl.gradientMask = gradientMask_alphaFilter;
         break;
     }
-    
-    
+
+
     // creating own z-index stacking context for an element
 
 
     /**
      * Creates own stacking context for the given element
-     * 
+     *
      * Uses isolation css property
-     * 
+     *
      * @param {Element} elem to create stacking context for
      */
     var stackingContext_isolation = function(elem) {
@@ -403,11 +403,11 @@ function (exports) {
 
     /**
      * Creates own stacking context for the given element
-     * 
+     *
      * Applies identity transformation to an element (which forces
      * initializinga stacking context for the element, since the
      * transformation is processed by GPU)
-     * 
+     *
      * @param {Element} elem to create stacking context for
      */
     var stackingContext_transform = function(elem) {
@@ -417,11 +417,11 @@ function (exports) {
 
     /**
      * Creates own stacking context for the given element
-     * 
+     *
      * Sets the opacity of the element to a value a bit smaller than 1
      * (which forces initializinga stacking context for the element,
      * since the transformation is processed by GPU)
-     * 
+     *
      * @param {Element} elem to create stacking context for
      */
     var stackingContext_opacity = function(elem) {
@@ -431,7 +431,7 @@ function (exports) {
 
     /**
      * Creates own stacking context for the given element
-     * 
+     *
      * @param {Element} elem to create stacking context for
      */
     switch (METHODS.stackingContext) {
@@ -449,17 +449,17 @@ function (exports) {
         break;
     }
 
-    
-    
+
+
     // Using canvas as a background in different browsers
 
     /**
      * Sets the content of the given canvas as a background for the
      * given element
-     * 
+     *
      * Obtains the raw data using toDataURL() method and places it as
      * a background
-     * 
+     *
      * @param {Element} elem to set background for
      * @param {Element} canvas element to use as a background
      */
@@ -467,16 +467,16 @@ function (exports) {
         elem.style.backgroundImage =
             'url('+util.getCanvasDataURL(canvas)[0]+')';
     }
-    
-    
+
+
 
     /**
      * Sets the content of the given canvas as a background for the
      * given element
-     * 
+     *
      * Uses the global css canvas context along with -webkit-canvas
      * CSS function
-     * 
+     *
      * @param {Element} elem to set background for
      * @param {Element} canvas element to use as a background
      */
@@ -496,14 +496,14 @@ function (exports) {
             '-webkit-canvas('+canvas.CSSContextId+')';
     }
 
-    
+
     /**
      * Sets the content of the given canvas as a background for the
      * given element
-     * 
+     *
      * Uses the existing canvas along with the -moz-element CSS
      * function
-     * 
+     *
      * @param {Element} elem to set background for
      * @param {Element} canvas element to use as a background
      */
@@ -518,7 +518,7 @@ function (exports) {
                 width: '0px',
                 height: '0px'
             });
-            
+
             document.body.appendChild(canvas);
         }
 
@@ -542,12 +542,12 @@ function (exports) {
 
 
     // Asynchronous function invocation
-    
+
     /**
      * Performs a method asynchronously
-     * 
+     *
      * setTimeout() version
-     * 
+     *
      * @param {Function} func method to invoke
      * @param {Object} obj context object
      * @param {Array} args
@@ -560,9 +560,9 @@ function (exports) {
 
     /**
      * Performs a method asynchronously
-     * 
+     *
      * Event emission version
-     * 
+     *
      * @param {Function} func method to invoke
      * @param {Object} obj context object
      * @param {Array} args
@@ -596,12 +596,12 @@ function (exports) {
 
     /**
      * Checks if the given element has the given class
-     * 
+     *
      * reads classList array
-     * 
+     *
      * @param {Element} elem to check against having the class
      * @param {String} cls class name
-     * 
+     *
      * @returns {Boolean}
      */
     var hasClass_classList = function(elem, cls) {
@@ -620,12 +620,12 @@ function (exports) {
 
     /**
      * Checks if the given element has the given class
-     * 
+     *
      * evaluates className string
-     * 
+     *
      * @param {Element} elem to check against having the class
      * @param {String} cls class name
-     * 
+     *
      * @returns {Boolean}
      */
     var hasClass_className = function(elem, cls) {
@@ -642,46 +642,46 @@ function (exports) {
         return result;
     }
 
-    
+
     if (METHODS.hasClass == 'classList') {
         impl.hasClass = hasClass_classList;
     } else {
         impl.hasClass = hasClass_className;
     }
-    
-    
+
+
     // setting float:left for an element
 
 
     /**
      * Applies float:left for the element.
-     * 
+     *
      * Direct implementation simply updates the style property
-     * 
+     *
      * @param {Element} elem to set float:left for
      */
     var floatLeft_direct = function(elem) {
         elem.style['float'] ='left';
     }
-    
-    
+
+
     /**
      * Applies float:left for the element.
-     * 
+     *
      * For some reasons, direct way does not work in FF < 36, so this
      * variant creates a stylesheet and sets the class for the element
-     * 
+     *
      * @param {Element} elem to set float:left for
      */
     var floatLeft_stylesheet = function(elem) {
         elem.className = getFloatLeftClassName();
     }
-    
-    
+
+
     /**
      * Creates a stylesheet (if not created yet) with the css class
      * having float:left
-     * 
+     *
      * @returns {String} name of the css class to apply
      */
     var _floatLeftClassName = null;
@@ -705,8 +705,8 @@ function (exports) {
     } else {
         impl.floatLeft = floatLeft_direct;
     }
-    
-    
+
+
 
     var util = {};
 
@@ -729,7 +729,7 @@ function (exports) {
 
     /**
      * Applies the list of style properties to the element
-     * 
+     *
      * @param {Element} elem to apply style to
      * @param {Object} style
      */
@@ -740,11 +740,11 @@ function (exports) {
             }
         }
     }
-    
-    
+
+
     /**
      * Applies the set of attributes to the element
-     * 
+     *
      * @param {Element} elem to set attributes for
      * @param {Object} attributes
      */
@@ -755,26 +755,26 @@ function (exports) {
             }
         }
     }
-    
-    
+
+
     /**
      * Casts the value to the string and adds 'px' to the end
-     * 
+     *
      * @param {Number} value
-     * 
+     *
      * @returns {String}
      */
     util.px = function(value) {
         return '' + value + 'px';
     }
-    
-    
+
+
     /**
      * Removes all child nodes from the given element, returns those
      * as an array
-     * 
+     *
      * @param {Element} elem to remove the child nodes from
-     * 
+     *
      * @returns {Array} nodes removed from the element
      */
     util.detachChildren = function(elem) {
@@ -789,7 +789,7 @@ function (exports) {
 
     /**
      * Attaches the given set of nodes to the given element
-     * 
+     *
      * @param {Element} elem to attach nodes to
      * @param {Array} nodes to attach as children
      */
@@ -799,16 +799,16 @@ function (exports) {
         }
     }
 
-    
+
     /**
      * Returns a cached copy of dataURL of the canvas, performs
      * caching if needed (assuming the image is never changed).
-     * 
+     *
      * The dataURL itself is always transfered in an array in order to
      * prevent copying the whole string upon function invocation
-     * 
+     *
      * @param {Element} canvas
-     * 
+     *
      * @returns {Array} dataURL with the canvas image
      */
     util.getCanvasDataURL = function(canvas) {
@@ -822,10 +822,10 @@ function (exports) {
 
     /**
      * Creates and returns a new canvas element
-     * 
+     *
      * @param {Number} w width
      * @param {Number} h height
-     * 
+     *
      * @returns {Element} created canvas element
      */
     util.genCanvas = function(w,h) {
@@ -845,9 +845,9 @@ function (exports) {
     /**
      * Produces a canvas element containing the image of the given img
      * element
-     * 
+     *
      * @param {Element} img
-     * 
+     *
      * @returns {Element} canvas
      */
     util.img2canvas = function(img) {
@@ -864,11 +864,11 @@ function (exports) {
 
     /**
      * Creates and returns a new SVG element
-     * 
+     *
      * @param {String} name of the SVG element to create
      * @param {Element} parent element
      * @param {Object} attrs attributes for the new element
-     * 
+     *
      * @returns {Element} newly created SVG element
      */
     util._svgNS = 'http://www.w3.org/2000/svg';
@@ -895,13 +895,13 @@ function (exports) {
 
         return elem;
     }
-    
-    
+
+
     /**
      * Generates (if not generated yet) an SVG element which is
      * intended to store common SVG objects to be later reused along
      * the application
-     * 
+     *
      * @returns {Element} common svg element
      */
     util._commonSVG = null;
@@ -919,13 +919,13 @@ function (exports) {
 
         return util._commonSVG;
     }
-    
+
 
     /**
      * Generates (if not generated yet) an SVG element with a <defs>
      * section and returns the <defs> which is intended to store
      * common SVG objects to be later reused along the application
-     * 
+     *
      * @returns {Element} common defs element
      */
     util._commonSVGDefs = null;
@@ -943,7 +943,7 @@ function (exports) {
     /**
      * Generates an SVG element containing a linear gradient in the
      * given direction
-     * 
+     *
      * @param {Element} parent parent element (defs)
      * @param {String} dir gradient direction (north, east, ...)
      * @param {String} id of the gradient to assign
@@ -974,7 +974,7 @@ function (exports) {
         var linearGradient = util.genSVGElement(
             'linearGradient', parent, gradientAttr
         );
-        
+
         var i, p;
         for (i = 0; i <= 10; i++) {
             p = ''+((10-i)*(10-i)) + '%';
@@ -984,9 +984,9 @@ function (exports) {
             });
         }
     }
-    
-    
-    
+
+
+
     /**
      * @returns {Element} the default canvas image ("ashed pages")
      * used when an image failed to load for some reason
@@ -999,13 +999,13 @@ function (exports) {
 
         return util._defaultCanvas;
     }
-    
-    
+
+
     /**
      * Generates a default canvas image ("ashed pages") used when a
      * scrolling indication image was not provided by a user, or
      * failed to load for some reason
-     * 
+     *
      * @returns {Element} canvas element containing the default image
      */
     util._genDefaultCanvas = function() {
@@ -1044,12 +1044,12 @@ function (exports) {
      * Takes the provided function and returns another which works
      * exactly as the one provided, but is only invoked if arguments
      * changed since last invocation (strict comparsion used)
-     * 
+     *
      * Useful for the methods performing UI update which is normally
      * expenisve
-     * 
+     *
      * @param {Function} method to convert
-     * 
+     *
      * @returns {Function} converted method
      */
     util.saverMethod = function(method) {
@@ -1073,12 +1073,12 @@ function (exports) {
             }
         }
     }
-    
+
 
 
     // Whenable pattern
     var wl = {};
-    
+
     /**
      * Whenable event object constructor
      */
@@ -1088,10 +1088,10 @@ function (exports) {
         this._result = [];      // args transfered to the listener
     }
 
-      
+
     /**
      * Fires the event, issues the listeners
-     * 
+     *
      * @param ... all given arguments are forwarded to the listeners
      */
     wl.Whenable.prototype.emit = function(){
@@ -1110,7 +1110,7 @@ function (exports) {
             }
         }
     }
-      
+
 
     /**
      * @returns {Function} whenable subscriber to the event
@@ -1122,10 +1122,10 @@ function (exports) {
         }
     }
 
-      
+
     /**
      * Adds another listener to be executed upon the event emission
-     * 
+     *
      * @param {Function} func listener function to subscribe
      * @param {Object} ctx optional context to call the listener in
      */
@@ -1136,16 +1136,16 @@ function (exports) {
             this._listeners.push([func, ctx||null]);
         }
     }
-      
-      
+
+
     /**
      * For the given whenable subscribers produces another whenable
      * subscriber which fires when all of the given subscribers fire
-     * 
+     *
      * @param {Function} when1
      * @param {Function} when2
      * @param ...
-     * 
+     *
      * @returns {Function}
      */
     wl.whenAll = function() {
@@ -1166,12 +1166,12 @@ function (exports) {
             return whenAll.getSubscriber();
         }
     }
-    
-    
+
+
     /**
      * Stores a setter function and reuses it to perform smooth
      * animation on demand
-     * 
+     *
      * @param {Function} setter updating the value to be animated
      */
     var Animator = function(setter) {
@@ -1186,7 +1186,7 @@ function (exports) {
     /**
      * Changes the value instantly (the most reasonable strategy
      * selected instead in case when animation is running)
-     * 
+     *
      * @param {Number} val to set
      */
     Animator.prototype.jump = function(val) {
@@ -1214,11 +1214,11 @@ function (exports) {
             this._applyValue(val);
         }
     }
-    
-    
+
+
     /**
      * Changes the value smoothly
-     * 
+     *
      * @param {Number} val to be finally reached
      */
     Animator.prototype.slide = function(val) {
@@ -1233,8 +1233,8 @@ function (exports) {
             this._tick();
         }
     }
-    
-    
+
+
     /**
      * Performs a single animation step
      */
@@ -1255,19 +1255,19 @@ function (exports) {
             this._applyValue(this._current+this._delta);
         }
     }
-        
-    
+
+
     /**
      * Applies current animation frame
-     * 
+     *
      * @param {Number} value to apply
      */
     Animator.prototype._applyValue = function(value) {
         this._current = value;
         this._setter(value);
     }
-    
-    
+
+
     /**
      * Clears animation timeout
      */
@@ -1275,15 +1275,15 @@ function (exports) {
         clearTimeout(this._animTimeout);
         this._animTimeout = null;
     }
-    
-    
+
+
      // stores the images along with the stretched canvas
     var imgCache = {};
 
 
     /**
      * Represents a single cached stretchable image
-     * 
+     *
      * Loads an image, creates a stretched canvas
      */
     var CachedImg = function(url) {
@@ -1306,8 +1306,8 @@ function (exports) {
             this._download();
         }
     }
-    
-    
+
+
     /**
      * Loads the image
      */
@@ -1332,16 +1332,16 @@ function (exports) {
                 me._init(null);
                 me._ready.emit();
             }, false);
-            
+
             document.body.appendChild(this._img);
         }
     }
-    
-    
+
+
     /**
      * Creates the cached copy of rotated canvas (if needed), and
      * returns it afterwards
-     * 
+     *
      * @param {String} dir direction
      */
     CachedImg.prototype.getSide = function(dir) {
@@ -1351,13 +1351,13 @@ function (exports) {
 
         return this._sides[dir];
     }
-    
+
 
     /**
      * Creates (if not done yet) an SVG image element containing the
      * stretched image and stored in the common <defs> element,
      * returns its id
-     * 
+     *
      * @param {String} id of an SVG element with the stretched image
      */
     var SVGImageCounter = 0;
@@ -1383,8 +1383,8 @@ function (exports) {
 
         return this._SVGImageId;
     }
-    
-    
+
+
     /**
      * Updates image geometry without changing it. Needed for IE,
      * otherwise it will not redraw
@@ -1403,13 +1403,13 @@ function (exports) {
             );
         }
     }
-    
+
     CachedImg.prototype._touch = function() {
         this._SVGImage.setAttribute(
             'height', util.px(this._data.stretchedSize)
         );
     }
-    
+
 
     /**
      * @returns {Object} additional data
@@ -1417,13 +1417,13 @@ function (exports) {
     CachedImg.prototype.getData = function() {
         return this._data;
     }
-    
+
 
     /**
      * After the image is loaded (or failed to load), ininitializes
      * the CachedImg object with its stretched canvas images, and with
      * some additional data later used for animation
-     * 
+     *
      * @param {Element} image to initalize from, null for load failure
      */
     CachedImg.prototype._init = function(image) {
@@ -1434,14 +1434,14 @@ function (exports) {
         this._data.points = stretched.points;
         this._data.origSize = original.height;
     }
-    
+
 
     /**
      * Generates a canvas containing the data from the provided image,
      * or the default data if image failed to load
-     * 
+     *
      * @param {Element} image to initalize from, null for load failure
-     * 
+     *
      * @returns {Element} canvas
      */
     CachedImg.prototype._genImageCanvas = function(image) {
@@ -1455,8 +1455,8 @@ function (exports) {
         return result;
     }
 
-    
-    
+
+
     /**
      * Stretches the given canvas data and returns the new canvas with
      * the stretched content. The image is stretched in a special way,
@@ -1464,13 +1464,13 @@ function (exports) {
      * vertical density is decreased from top to bottom. Pixels on the
      * top edge have the same density as the original image, while the
      * pixels on the bottom edge are 4 times vertically stretched.
-     * 
+     *
      * The density function
-     * 
+     *
      *   ro(x) = 45/68*x*x - 24/17*x + 1
-     * 
+     *
      * results from the following conditions:
-     * 
+     *
      * 1) ro(0) = 1 (destiny at the top edge equals the orig. image)
      * 2) ro(1) = 1/4 (density at the bottom is 4 times less)
      * 3) ro'(1) = ro2'(0), where:
@@ -1478,9 +1478,9 @@ function (exports) {
      *    image, linearly stretched four times. The last condition
      *    means that the speed of density change for the two images
      *    attached one to another is continuous
-     * 
+     *
      * @param {Element} canvas containing the original image
-     * 
+     *
      * @returns {Object} stretched canvas and density points
      */
     CachedImg.prototype._stretch = function(canvas) {
@@ -1547,7 +1547,7 @@ function (exports) {
             y1_floor = Math.floor(y1);
 
             points[y1_floor] = y2;
-           
+
             rate0 = Math.min(ro, y1_floor + 1 - y1);
             rate1 = ro - rate0;
 
@@ -1574,14 +1574,14 @@ function (exports) {
             points: points
         };
     }
-    
-    
+
+
     /**
      * Generates the canvas rotated in the given direction
-     * 
+     *
      * @param {Element} north original canvas element
      * @param {String} dir direction to rotate the canvas
-     * 
+     *
      * @returns {Element} rotated canvas
      */
     CachedImg.prototype._rotate = function(north, dir) {
@@ -1614,14 +1614,14 @@ function (exports) {
 
         return rotated;
     }
-    
-    
+
+
     /**
      * Calculates additional data for the given stretched canvas
      * element later reused for animation
-     * 
+     *
      * @param {Element} canvas to generate data for
-     * 
+     *
      * @returns {Object} data
      */
     CachedImg.prototype._genData = function(canvas) {
@@ -1638,7 +1638,7 @@ function (exports) {
 
         // how many virtual elements do we need to reach 1 px
         var virtualNum = 1 + Math.ceil(Math.log(1/h) / Math.log(1/4));
-        
+
         // total height of all virtual elements altogether
         var virtualSize = 0;
         curSize = h;
@@ -1646,7 +1646,7 @@ function (exports) {
             curSize /= 4;
             virtualSize += Math.floor(curSize);
         }
-        
+
         return {
             // size of the stretched image
             stretchedSize : h,
@@ -1659,11 +1659,11 @@ function (exports) {
             virtualSize3 : virtualSize*3
         };
     };
-    
-    
+
+
     /**
      * Represents an element upgraded with the resize event detector
-     * 
+     *
      * @param {Element} elem to upgarde
      * @param {Boolean} isBody true if element is body
      * @param {Function} listener to be issued on resize
@@ -1719,7 +1719,7 @@ function (exports) {
     };
 
 
-    
+
     /**
      * Removes the resize detector from the element
      */
@@ -1732,13 +1732,13 @@ function (exports) {
             this._elem.removeChild(this._detector);
         }
     }
-    
 
-    
+
+
     /**
      * Represents a scrollable element shipped with a scrolling
      * indicator on each of four sides
-     * 
+     *
      * @param {Element} elem to create scrollable indicators for
      */
     var Intence = function(elem) {
@@ -1769,7 +1769,7 @@ function (exports) {
             this._sideReady[dir] = false;
             this._addendum[dir] = 0;
             this._lastOrigCoord[dir] = 0;
-            
+
             this._totals[dir] =
                 util.isVertical[dir] ? scrollHeight : scrollWidth;
             this._sizes[dir] =
@@ -1778,7 +1778,7 @@ function (exports) {
 
         this._loadImages();
     }
-    
+
 
     /**
      * @returns {Element} main element
@@ -1786,8 +1786,8 @@ function (exports) {
     Intence.prototype.getElem = function() {
         return this._elem;
     }
-    
-    
+
+
     /**
      * @returns {Element} actual scroller
      */
@@ -1797,12 +1797,20 @@ function (exports) {
 
 
     /**
+     * @returns {Element} content container
+     */
+    Intence.prototype.getContainer = function() {
+        return this._cmp.container;
+    }
+
+
+    /**
      * Upgrades the element with a set of additional elements one
      * inside another so that the scrollbars are properly hidden, but
      * the container geometry is preserved
-     * 
+     *
      * The resulting structure consists of the following elements:
-     * 
+     *
      * elem  - initial scrollable element, its original content is
      *  │      taken over, and moves into the container (see below)
      *  │
@@ -1850,8 +1858,8 @@ function (exports) {
         this._createResizer();
         this._createSides();
     }
-    
-    
+
+
     /**
      * Creates a set of elements
      */
@@ -1887,6 +1895,7 @@ function (exports) {
             container : {}
         };
 
+
         this._origStyle = {overflow : this._elem.style.overflow};
         if (this._isBody) {
             var margins = [
@@ -1913,7 +1922,7 @@ function (exports) {
         util.setStyle(this._cmp.container, style.container);
 
         impl.stackingContext(this._cmp.contextor);
-        
+
         util.attachChildren(
             this._cmp.container, util.detachChildren(this._elem)
         );
@@ -1924,8 +1933,8 @@ function (exports) {
         this._cmp.wrapper.appendChild(this._cmp.contextor);
         this._elem.appendChild(this._cmp.wrapper);
     }
-    
-    
+
+
     /**
      * Creates the resizer and subscribes to resize event
      */
@@ -1966,7 +1975,7 @@ function (exports) {
      */
     Intence.prototype._restoreElemStructure = function() {
         this._resizer.destroy();
-        
+
         var children = util.detachChildren(this._cmp.container);
         util.detachChildren(this._elem);
 
@@ -1975,10 +1984,10 @@ function (exports) {
                 this._elem.style[prop] = this._origStyle[prop];
             }
         }
-        
+
         util.attachChildren(this._elem, children);
     }
-    
+
 
     /**
      * Updates the subcomponents geometry according to the element
@@ -2029,7 +2038,7 @@ function (exports) {
 
             this._images[dir] = img;
         }
-        
+
         wl.whenAll(
             sideInitialized.north.getSubscriber(),
             sideInitialized.east.getSubscriber(),
@@ -2043,12 +2052,12 @@ function (exports) {
             'scroll', function(){me._indicate();}, false
         );
     }
-    
+
 
     /**
      * Updates the scrolling indicators on each side according to the
      * current scroll state of the element
-     * 
+     *
      * @param {Boolean} init true to perform initial indicate
      */
     Intence.prototype._indicate = function(init) {
@@ -2096,8 +2105,8 @@ function (exports) {
             }
         }
     }
-    
-    
+
+
     /**
      * @returns {Object} the area scrolling information
      */
@@ -2111,18 +2120,18 @@ function (exports) {
         };
     }
 
-    
+
     /**
      * For the scrollable area returns the amount of pixels scrollable
      * beyond each side
-     * 
+     *
      * For Opera and zoomed page the distances may be non-integer and
      * it might not be possible to scroll to the end, so the method
      * rounds-up the values
-     * 
+     *
      * @param {Object} geom geometry returned by getBoundingClientRect
      * @param {Object} scroll area scroll information
-     * 
+     *
      * @returns {Object}
      */
     Intence.prototype._getBeyond = function(geom, scroll) {
@@ -2137,32 +2146,32 @@ function (exports) {
             )
         };
     }
-    
-    
+
+
     /**
      * Fixes the geometry coordinate / scrolling amount which might be
      * reported as negative or non-integer on some browsers /
      * zoom-levels
-     * 
+     *
      * @param {Number} val
-     * 
+     *
      * @returns {Number} fixed coordinate (integer >=0)
      */
     Intence.prototype._fixCoord = function(val) {
         return Math.max(0, Math.floor(val));
     }
-    
-    
+
+
     /**
      * Returns the coordinate of the original (unstretched) texture
      * which is synced with the scrolling amount
-     * 
+     *
      * @param {String} dir direction
      * @param {Object} beyond set of scrolling amounts
      * @param {Number} size (height) of the original texture
      * @param {Boolean} keep true to keep the orig coord and update
      *                       the offset instead
-     * 
+     *
      * @returns {Number} original coordinate
      */
     Intence.prototype._getOrigCoord = function(
@@ -2184,12 +2193,12 @@ function (exports) {
 
         return result;
     }
-    
-    
+
+
     /**
      * Returns the information about which sides are set as being
      * infinitely scrollable with scrollInfinite.. attributes
-     * 
+     *
      * @returns {Object}
      */
     Intence.prototype._getInfinite = function() {
@@ -2203,18 +2212,18 @@ function (exports) {
 
         return result;
     }
-    
-    
-    
+
+
+
     /**
      * Checks if total size of the area changed in the corresponding
      * dimension. This might happen either due to resize or due to
      * dynamically changed geometry - in both cases the intensity mask
      * is updated, but not the blocks coordinates
-     * 
+     *
      * @param {String} dir direction
      * @param {Object} geom geometry returned by getBoundingClientRect
-     * 
+     *
      * @returns {Boolean} true if sizes changed, false otherwise
      */
     Intence.prototype._haveSizesChanged = function(dir, geom) {
@@ -2235,10 +2244,10 @@ function (exports) {
      * might happen either due to resize or due to dynamically changed
      * content - in both cases the intensity mask is updated, but not
      * the blocks coordinates
-     * 
+     *
      * @param {String} dir direction
      * @param {Object} scroll data of the scroller
-     * 
+     *
      * @returns {Boolean} true if total dimensions changed
      */
     Intence.prototype._haveTotalsChanged = function(dir, scroll) {
@@ -2253,11 +2262,11 @@ function (exports) {
 
         return changed;
     }
-    
+
 
     /**
      * Returns the division remainder (0 to value-1)
-     * 
+     *
      * @param {Number} value
      * @param {Number} module
      */
@@ -2271,17 +2280,17 @@ function (exports) {
 
         return value;
     }
-    
+
 
     /**
      * Returns the size of the blocks container which depends on the
      * scroll amount beyond the border
-     * 
+     *
      * @param {Number} beyond number of px beyond the border
      * @param {Boolean} infinite true if side is set as infinite
      * @param {Number} maxSize of the container
      * @param {Number} areaSize visible area size
-     * 
+     *
      * @returns {Number} current size of the container
      */
     Intence.prototype._getIntensity = function(
@@ -2294,8 +2303,8 @@ function (exports) {
         var size = pad + Math.ceil(intensity * (max-pad))
         return size;
     }
-    
-    
+
+
     /**
      * Removes the additional indicator elements, thus restores the
      * element in its original state
@@ -2304,7 +2313,7 @@ function (exports) {
         this._restoreElemStructure();
         this._destroyed = true;
     }
-    
+
 
 
     /**
@@ -2313,7 +2322,7 @@ function (exports) {
      * blocks coordiantes, geometry and related data, and reuses
      * platform-dependent Container object implementation to actually
      * update blocks on the screen.
-     * 
+     *
      * @param {String} dir indicator direction
      * @param {Element} parent DOM element to create indicator on
      * @param {Element} side hosting element
@@ -2355,11 +2364,11 @@ function (exports) {
 
         this._intensityAnimator = new Animator(update);
     }
-    
-    
+
+
     /**
      * Updates the indication components according to the new data
-     * 
+     *
      * @param {Number} width of the whole scrollable area
      * @param {Number} height of the whole scrollable area
      * @param {Number} amount of the scroll on the given side
@@ -2390,9 +2399,9 @@ function (exports) {
 
     /**
      * Updates parent geometry
-     * 
+     *
      * Converted to a saver method in the constructor for each instance
-     * 
+     *
      * @param {Number} width
      * @param {Number} height
      */
@@ -2405,9 +2414,9 @@ function (exports) {
 
     /**
      * Updates scroll amount
-     * 
+     *
      * Converted to a saver method in the constructor for each instance
-     * 
+     *
      * @param {Number} amount
      */
     Indicator.prototype._setScrollAmount = function(amount) {
@@ -2415,13 +2424,13 @@ function (exports) {
         this._recalculateCoordinates();
         this._updateBlocks();
     }
-    
-    
+
+
     /**
      * Updates side offset of the indicated texture
-     * 
+     *
      * Converted to a saver method in the constructor for each instance
-     * 
+     *
      * @param {Number} offset
      */
     Indicator.prototype._setOffset = function(offset) {
@@ -2463,13 +2472,13 @@ function (exports) {
             coord += this._sizes[i];
         }
     }
-    
-    
+
+
     /**
      * Actually updates the intensity of the Indicator (gradient mask
      * size and thus the amount of blocks shown), used as the
      * animation frame function for the intensity animator object
-     * 
+     *
      * @param {Number} intensity (px) size of the gradient mask
      * @param {Number} parentWidth width of the parent container
      * @param {Number} parentHeight height of the parent container
@@ -2483,14 +2492,14 @@ function (exports) {
         );
         this._updateBlocks();
     }
-    
-    
+
+
     /**
      * Calculates how many blocks are covered by the given size of the
      * gradient mask
-     * 
+     *
      * @param {Number} size
-     * 
+     *
      * @returns {Number} number of blocks covered
      */
     Indicator.prototype._calculateShown = function(size) {
@@ -2504,8 +2513,8 @@ function (exports) {
 
         return shown;
     }
-    
-    
+
+
     /**
      * Actually applies current offset value
      */
@@ -2520,8 +2529,8 @@ function (exports) {
             }
         }
     }
-    
-    
+
+
     /**
      * Redraws current values of the blocks coordinates when scrolling
      * amount or container geometry changed
@@ -2535,8 +2544,8 @@ function (exports) {
         }
         this._container.endBlocksUpdate();
     }
-    
-    
+
+
     /**
      * Updates the amount of shown / hidden blocks, and redraws newly
      * revealed blocks
@@ -2558,10 +2567,10 @@ function (exports) {
         }
     }
 
-    
+
     /**
      * Updates the geometry and offset for a single block
-     * 
+     *
      * @param {Number} blockNum number of the block to update
      */
     Indicator.prototype._updateBlock = function(blockNum) {
@@ -2579,14 +2588,14 @@ function (exports) {
             this._parentWidth, this._parentHeight
         );
     }
-    
-    
+
+
     /**
      * Creates a DOM component enclosing a scroll indicator on a
      * single side. Used by all implementations of Container
-     * 
+     *
      * @param {String} dir direction to create side for
-     * 
+     *
      * @returns {Element} created side
      */
     var createSideElement = function(dir) {
@@ -2627,7 +2636,7 @@ function (exports) {
     /**
      * Updates the side element size to a new value which depends on
      * indication intensity
-     * 
+     *
      * @param {Element} side to update
      * @param {String} dir direction to create side for
      * @param {Number} intensity (px) size of the gradient mask
@@ -2661,19 +2670,19 @@ function (exports) {
             style.top = util.px(backcoord+2);
             break;
         }
-        
+
         util.setStyle(side, style);
     }
-    
-    
+
+
 
     /**
      * Container is a platform-dependent object which updates the
      * blocks of a single Indicator
-     * 
+     *
      * Cotainer_div creates blocks as DOM elements and uses the images
      * of the rotated canvases
-     * 
+     *
      * @param {String} dir indicator direction
      * @param {Element} parent DOM element to create indicator on
      * @param {Element} side element to host the side on
@@ -2690,15 +2699,15 @@ function (exports) {
         this._parent = parent;
         this._side = side;
         this._image = image;
-        
+
         // internals
         this._blocks = [];
 
         impl.gradientMask(this._side, this._dir);
         this._createBlocks();
     }
-    
-    
+
+
     /**
      * Creates blocks components
      */
@@ -2724,31 +2733,31 @@ function (exports) {
             this._blocks.push(block);
         }
     }
-    
-    
+
+
     /**
      * Shows the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to show
      */
     Container_div.prototype.showBlock = function(blockNum) {
         this._blocks[blockNum].style.display = 'block';
     }
-    
-    
+
+
     /**
      * Hides the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to hide
      */
     Container_div.prototype.hideBlock = function(blockNum) {
         this._blocks[blockNum].style.display = 'none';
     }
-    
-    
+
+
     /**
      * Updates gradient mask amount
-     * 
+     *
      * @param {Number} intensity (px) size of the gradient mask
      * @param {Number} width of the scrollable area
      * @param {Number} height of the scrollable area
@@ -2764,7 +2773,7 @@ function (exports) {
 
     /**
      * Updates the image side offset for the given block
-     * 
+     *
      * @param {Number} blockNum number of the block to update offset
      * @param {Number} offset value to set
      * @param {Number} width of the scrollable area
@@ -2790,12 +2799,12 @@ function (exports) {
 
         this._blocks[blockNum].style.backgroundPosition = position;
     }
-    
-    
+
+
     /**
      * Applies all needed changes to reflect the change of the parent
      * geometry change
-     * 
+     *
      * @param {Number} width of the parent container
      * @param {Number} height of the parent container
      */
@@ -2811,11 +2820,11 @@ function (exports) {
 
         util.setStyle(this._side, style);
     }
-   
+
 
     /**
      * Updates geometry of a single block
-     * 
+     *
      * @param {Number} blockNum number of the block to update
      * @param {Number} coordinate of the block
      * @param {Number} size of the block
@@ -2918,15 +2927,15 @@ function (exports) {
     if (METHODS.blocks == 'svg') {
         var svgBlocksTemplate = createSVGTemplate();
     }
-    
-    
+
+
     /**
      * Container is a platform-dependent object which updates the
      * blocks of a single Indicator
-     * 
+     *
      * Container_svg creates the blocks within a single SVG element
      * reusing the template created above
-     * 
+     *
      * @param {String} dir indicator direction
      * @param {Element} parent DOM element to create indicator on
      * @param {Element} side element to host the side on
@@ -2959,10 +2968,10 @@ function (exports) {
         this._setMask();
         this._createBlocks(width, height);
     }
-    
+
     Container_svg._svgBlockCounter = 0;
-    
-    
+
+
     /**
      * Creates the main side component of the indicator enclosing all
      * the blocks
@@ -2990,7 +2999,7 @@ function (exports) {
 
         var rectWidth  = this._isVertical ? '100%' : 0;
         var rectHeight = this._isVertical ? 0 : '100%';
-        
+
         var maskRect = mask.childNodes[0];
         util.setAttributes(maskRect, {
             width  : rectWidth,
@@ -3008,7 +3017,7 @@ function (exports) {
             width  : util.px(rectWidth),
             height : util.px(rectHeight)
         });
-        
+
         this._side.appendChild(svg);
 
         this._svg = svg;
@@ -3016,11 +3025,11 @@ function (exports) {
         this._maskRect = maskRect;
         this._g = g;
     }
-    
-    
+
+
     /**
      * Creates blocks components
-     * 
+     *
      * @param {Number} width of the whole scrollable area
      * @param {Number} height of the whole scrollable area
      */
@@ -3063,27 +3072,27 @@ function (exports) {
                 height : util.px(rectHeight),
                 style  : 'fill: url(#' + patternId + ');'
             });
-            
+
             this._uses[i].setAttribute(
                 'transform','matrix(1 0 0 1 0 0)'
             );
         }
     }
-    
-    
+
+
     /**
      * Shows the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to show
      */
     Container_svg.prototype.showBlock = function(blockNum) {
         // block size is restored by updateIntensity() method
     }
-    
-    
+
+
     /**
      * Hides the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to hide
      */
     Container_svg.prototype.hideBlock = function(blockNum) {
@@ -3096,11 +3105,11 @@ function (exports) {
 
         util.setAttributes(this._rects[blockNum], wh);
     }
-    
-    
+
+
     /**
      * Updates gradient mask amount
-     * 
+     *
      * @param {Number} intensity (px) size of the gradient mask
      * @param {Number} width of the scrollable area
      * @param {Number} height of the scrollable area
@@ -3127,7 +3136,7 @@ function (exports) {
 
     /**
      * Updates the image side offset for the given block
-     * 
+     *
      * @param {Number} blockNum number of the block to update offset
      * @param {Number} offset value to set
      * @param {Number} width of the scrollable area
@@ -3147,12 +3156,12 @@ function (exports) {
         attr[this._isVertical?'x':'y'] = offsetPx;
         util.setAttributes(this._patterns[blockNum], attr);
     }
-    
-    
+
+
     /**
      * Applies all needed changes to reflect the change of the parent
      * geometry change
-     * 
+     *
      * @param {Number} width of the parent container
      * @param {Number} height of the parent container
      */
@@ -3174,11 +3183,11 @@ function (exports) {
             util.setAttributes(this._rects[i], wh);
         }
     }
-   
+
 
     /**
      * Updates geometry of a single block
-     * 
+     *
      * @param {Number} blockNum number of the block to update
      * @param {Number} coordinate of the block
      * @param {Number} size of the block
@@ -3212,7 +3221,7 @@ function (exports) {
 
         util.setAttributes(this._rects[blockNum], wh);
         util.setAttributes(this._patterns[blockNum], wh);
-        
+
         var data = this._image.getData();
         var transform =
             this._uses[blockNum].transform.baseVal.getItem(0);
@@ -3257,7 +3266,7 @@ function (exports) {
 
     /**
      * Called by Indicator before and after blocks update
-     * 
+     *
      * Without hiding the side, IE goes crazy about rendering
      */
     Container_svg.prototype.startBlocksUpdate = function() {
@@ -3267,18 +3276,18 @@ function (exports) {
     Container_svg.prototype.endBlocksUpdate = function() {
         this._side.style.display = 'block';
     };
-    
+
 
 
     /**
      * Container is a platform-dependent object which updates the
      * blocks of a single Indicator
-     * 
+     *
      * Container_webkitTransform creates the blocks as the separate
      * DOM elements; -webkit-transform CSS function is used to rotate
      * the images. Therefore each side is initially rendered as north,
      * which avoids texture jump caused by rounding during scrolling.
-     * 
+     *
      * @param {String} dir indicator direction
      * @param {Element} parent DOM element to create indicator on
      * @param {Element} side element to host the side on
@@ -3303,8 +3312,8 @@ function (exports) {
         this._setMask();
         this._createBlocks();
     }
-    
-    
+
+
     /**
      * Creates the main side component of the indicator enclosing all
      * the blocks
@@ -3336,11 +3345,11 @@ function (exports) {
         }
 
         util.setStyle(this._side, style);
-        
+
         impl.gradientMask(this._side, 'north');
     }
-    
-    
+
+
     /**
      * Creates blocks components
      */
@@ -3360,11 +3369,11 @@ function (exports) {
             this._blocks.push(block);
         }
     }
-    
-    
+
+
     /**
      * Shows the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to show
      */
     Container_webkitTransform.prototype.showBlock = function(
@@ -3372,11 +3381,11 @@ function (exports) {
     ) {
         this._blocks[blockNum].style.display = 'block';
     }
-    
-    
+
+
     /**
      * Hides the block with the given number
-     * 
+     *
      * @param {Number} blockNum number of the block to hide
      */
     Container_webkitTransform.prototype.hideBlock = function(
@@ -3384,11 +3393,11 @@ function (exports) {
     ) {
         this._blocks[blockNum].style.display = 'none';
     }
-    
-    
+
+
     /**
      * Updates gradient mask amount
-     * 
+     *
      * @param {Number} intensity (px) size of the gradient mask
      * @param {Number} width of the scrollable area
      * @param {Number} height of the scrollable area
@@ -3402,7 +3411,7 @@ function (exports) {
 
     /**
      * Updates the image side offset for the given block
-     * 
+     *
      * @param {Number} blockNum number of the block to update offset
      * @param {Number} offset value to set
      * @param {Number} width of the scrollable area
@@ -3433,12 +3442,12 @@ function (exports) {
         this._blocks[blockNum].style.backgroundPosition =
             util.px(offset) + ' 1px';
     }
-    
-    
+
+
     /**
      * Applies all needed changes to reflect the change of the parent
      * geometry change
-     * 
+     *
      * @param {Number} width of the parent container
      * @param {Number} height of the parent container
      */
@@ -3471,14 +3480,14 @@ function (exports) {
             width : util.px((this._isVertical ? width : height)+2),
             WebkitTransform :  [translate, rotate].join(' ')
         }
-        
+
         util.setStyle(this._side, style);
     }
-   
+
 
     /**
      * Updates geometry of a single block
-     * 
+     *
      * @param {Number} blockNum number of the block to update
      * @param {Number} coordinate of the block
      * @param {Number} size of the block
@@ -3503,7 +3512,7 @@ function (exports) {
 
     Container_webkitTransform.prototype.startBlocksUpdate = function(){};
     Container_webkitTransform.prototype.endBlocksUpdate = function(){};
-    
+
 
 
     var Container;
@@ -3519,10 +3528,10 @@ function (exports) {
         break;
     }
 
-    
+
 
     var intences = [];
-    
+
     /**
      * Runs through all Intence instances, destroys those with
      * elements which do not have intence class anymore
@@ -3544,8 +3553,8 @@ function (exports) {
             }
         }
     }
-    
-        
+
+
     /**
      * Runs through all elements with intence class, creates the
      * Intence instance for those which do not have one yet
@@ -3561,9 +3570,11 @@ function (exports) {
                     intences.push(intence);
                     elem.intence = true;
                     elem.scroller = intence.getScroller();
+                    elem.container = intence.getContainer();
                 }
             } else {
                 elem.scroller = elem;
+                elem.container = elem;
             }
         }
     }
@@ -3577,8 +3588,8 @@ function (exports) {
         destroyUnintenced();
         createIntenced();
     }
-    
-    
+
+
     if (document.readyState == "complete") {
         reset();
     } else {
@@ -3589,4 +3600,3 @@ function (exports) {
     exports.reset = reset;
     exports.enabled = INTENCE_ENABLED;
 }));
-
