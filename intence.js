@@ -1863,7 +1863,8 @@
 
     // list of attributes to be forwarded to the container
     Intence.prototype._forwardAttrs = [
-        'contenteditable'
+        'contenteditable',
+        'spellcheck'
     ];
 
     // element styles to be forwarded to the container
